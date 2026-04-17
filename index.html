@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechUniverse | Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 text-slate-900">
+    <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2 font-bold text-xl text-blue-600">
+                <i data-lucide="cpu"></i> <span>TechUniverse</span>
+            </div>
+            <div class="space-x-6 font-medium">
+                <a href="index.html" class="text-blue-600">Home</a>
+                <a href="materi.html" class="hover:text-blue-600">Materi</a>
+                <a href="sejarah.html" class="hover:text-blue-600">Sejarah</a>
+                <a href="kuis.html" class="hover:text-blue-600">Kuis</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-gradient-to-r from-blue-700 to-indigo-800 text-white py-24 px-6">
+        <div class="container mx-auto text-center">
+            <h1 class="text-5xl font-extrabold mb-6">Jelajahi Dunia Komputer</h1>
+            <p class="text-xl text-blue-100 max-w-2xl mx-auto mb-10">Web edukasi interaktif ini dibuat oleh saya (Nabiel) untuk memahami teknologi masa kini dan masa depan.</p>
+            <div class="flex justify-center gap-8">
+            </div>
+            <a href="materi.html" class="inline-block mt-10 bg-white text-blue-700 px-8 py-3 rounded-full font-bold hover:bg-blue-50 transition">Mulai Belajar</a>
+        </div>
+    </header>
+
+    <script>
+        lucide.createIcons();
+        function animateValue(id, start, end, duration) {
+            let obj = document.getElementById(id);
+            let range = end - start;
+            let current = start;
+            let increment = end > start ? 1 : -1;
+            let stepTime = Math.abs(Math.floor(duration / range));
+            let timer = setInterval(function() {
+                current += increment;
+                obj.innerHTML = current;
+                if (current == end) clearInterval(timer);
+            }, stepTime);
+        }
+        animateValue("users", 0, 150, 2000);
+        animateValue("modules", 0, 12, 2000);
+    </script>
+</body>
+</html>

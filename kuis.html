@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Komprehensif | TechUniverse</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .option-btn:hover { transform: scale(1.02); }
+        .progress-bar { transition: width 0.4s ease-in-out; }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen">
+
+    <nav class="bg-white p-4 shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-blue-600 font-bold flex items-center gap-2">
+                <i data-lucide="chevron-left"></i> Keluar
+            </a>
+            <div class="flex flex-col items-end">
+                <span id="progress-text" class="text-xs font-bold text-slate-400 uppercase">Soal 1 / 25</span>
+                <div class="w-32 h-2 bg-slate-200 rounded-full mt-1">
+                    <div id="progress-bar" class="h-full bg-blue-600 rounded-full progress-bar" style="width: 4%"></div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-6 py-10 flex justify-center">
+        <div class="bg-white max-w-2xl w-full p-8 rounded-3xl shadow-xl">
+            
+            <div id="quiz-ui">
+                <div id="category-tag" class="inline-block px-3 py-1 rounded-lg bg-blue-100 text-blue-600 text-xs font-bold mb-4 uppercase tracking-widest">Materi Umum</div>
+                <h2 id="question" class="text-2xl font-bold mb-8 text-slate-800 leading-tight">Memuat soal...</h2>
+                <div id="options" class="grid gap-4"></div>
+            </div>
+
+            <div id="result-ui" class="hidden text-center py-10">
+                <i data-lucide="party-popper" class="w-20 h-20 text-yellow-500 mx-auto mb-4"></i>
+                <h2 class="text-3xl font-bold mb-2">Luar Biasa!</h2>
+                <p id="final-score" class="text-xl text-slate-600 mb-8"></p>
+                <div class="flex gap-4 justify-center">
+                    <button onclick="location.reload()" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 transition">Ulangi Kuis</button>
+                    <a href="index.html" class="bg-slate-200 text-slate-700 px-8 py-3 rounded-xl font-bold hover:bg-slate-300 transition">Selesai</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        const quizData = [
+            // SEJARAH (8 Soal)
+            { q: "Siapa yang dikenal sebagai 'Bapak Komputer'?", o: ["Alan Turing", "Charles Babbage", "Bill Gates", "Steve Jobs"], a: 1, c: "Sejarah" },
+            { q: "Siapa programmer wanita pertama di dunia?", o: ["Grace Hopper", "Ada Lovelace", "Marie Curie", "Sheryl Sandberg"], a: 1, c: "Sejarah" },
+            { q: "Komputer Generasi Pertama menggunakan teknologi apa?", o: ["Transistor", "Integrated Circuit", "Tabung Vakum", "Mikroprosesor"], a: 2, c: "Sejarah" },
+            { q: "ENIAC adalah contoh komputer dari generasi ke berapa?", o: ["1", "2", "3", "4"], a: 0, c: "Sejarah" },
+            { q: "Teknologi Integrated Circuit (IC) menandai dimulainya generasi...", o: ["Kedua", "Ketiga", "Keempat", "Kelima"], a: 1, c: "Sejarah" },
+            { q: "Apa nama alat hitung kuno yang dianggap cikal bakal pemikiran mekanis?", o: ["Kalkulator", "Abacus/Sempoa", "Slide Rule", "Napier Bone"], a: 1, c: "Sejarah" },
+            { q: "Apple II dan IBM PC muncul pada generasi komputer ke...", o: ["2", "3", "4", "5"], a: 2, c: "Sejarah" },
+            { q: "Bahasa FORTRAN dan COBOL mulai berkembang pada generasi...", o: ["Pertama", "Kedua", "Ketiga", "Keempat"], a: 1, c: "Sejarah" },
+
+            // HARDWARE & SOFTWARE (9 Soal)
+            { q: "Komponen yang berfungsi sebagai 'otak' komputer adalah...", o: ["GPU", "RAM", "CPU", "Motherboard"], a: 2, c: "Materi" },
+            { q: "Manakah penyimpanan yang bersifat 'Temporary' (sementara)?", o: ["SSD", "Harddisk", "RAM", "Flashdisk"], a: 2, c: "Materi" },
+            { q: "Apa kepanjangan dari SSD?", o: ["Super Speed Drive", "Solid State Drive", "System Storage Data", "Static Soft Drive"], a: 1, c: "Materi" },
+            { q: "Sistem Operasi (OS) termasuk dalam kategori...", o: ["Hardware", "Software Sistem", "Software Aplikasi", "Brainware"], a: 1, c: "Materi" },
+            { q: "Manakah yang merupakan contoh Software Aplikasi?", o: ["Windows 11", "Linux", "Microsoft Word", "macOS"], a: 2, c: "Materi" },
+            { q: "Perangkat yang digunakan untuk memasukkan data (Input) adalah...", o: ["Monitor", "Printer", "Keyboard", "Speaker"], a: 2, c: "Materi" },
+            { q: "CPU mengeksekusi instruksi data yang sedang berjalan di...", o: ["Monitor", "RAM", "Casing", "Keyboard"], a: 1, c: "Materi" },
+            { q: "Perangkat output yang menghasilkan salinan fisik (hardcopy) adalah...", o: ["Monitor", "Projector", "Printer", "Scanner"], a: 2, c: "Materi" },
+            { q: "Contoh Sistem Operasi Open Source adalah...", o: ["Windows", "macOS", "Linux", "iOS"], a: 2, c: "Materi" },
+
+            // JARINGAN, AI, & KEAMANAN (8 Soal)
+            { q: "Jaringan komputer dalam satu gedung disebut...", o: ["WAN", "MAN", "LAN", "PAN"], a: 2, c: "Materi" },
+            { q: "Apa singkatan dari IP Address?", o: ["Internet Protocol", "Internal Program", "Inter-Processor", "Instant Page"], a: 0, c: "Materi" },
+            { q: "Protokol standar untuk mengakses halaman web adalah...", o: ["FTP", "SMTP", "HTTP/HTTPS", "SSH"], a: 2, c: "Materi" },
+            { q: "Cabang AI yang membuat mesin bisa belajar dari data disebut...", o: ["Deep Sea", "Machine Learning", "Robotics", "Auto-Coding"], a: 1, c: "Materi" },
+            { q: "Upaya penipuan untuk mencuri data melalui email palsu disebut...", o: ["DDoS", "Malware", "Phishing", "Spam"], a: 2, c: "Materi" },
+            { q: "Sistem yang melindungi jaringan dari akses tidak sah disebut...", o: ["Antivirus", "Firewall", "Router", "Switch"], a: 1, c: "Materi" },
+            { q: "AI yang mampu menciptakan konten baru (teks/gambar) disebut...", o: ["Static AI", "Generative AI", "Analytical AI", "Basic AI"], a: 1, c: "Materi" },
+            { q: "Internet dikategorikan sebagai jenis jaringan...", o: ["LAN", "MAN", "WAN", "Intranet"], a: 2, c: "Materi" }
+        ];
+
+        let currentIdx = 0;
+        let score = 0;
+
+        function updateUI() {
+            const item = quizData[currentIdx];
+            document.getElementById('category-tag').innerText = item.c;
+            document.getElementById('question').innerText = item.q;
+            document.getElementById('progress-text').innerText = `Soal ${currentIdx + 1} / ${quizData.length}`;
+            document.getElementById('progress-bar').style.width = `${((currentIdx + 1) / quizData.length) * 100}%`;
+
+            const optionsDiv = document.getElementById('options');
+            optionsDiv.innerHTML = '';
+
+            item.o.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "option-btn w-full text-left p-5 rounded-2xl border-2 border-slate-100 hover:border-blue-500 hover:bg-blue-50 transition-all font-medium text-slate-700 shadow-sm";
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(idx);
+                optionsDiv.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIdx) {
+            if (selectedIdx === quizData[currentIdx].a) {
+                score++;
+            }
+            
+            currentIdx++;
+            if (currentIdx < quizData.length) {
+                updateUI();
+            } else {
+                showFinalResult();
+            }
+        }
+
+        function showFinalResult() {
+            document.getElementById('quiz-ui').classList.add('hidden');
+            const resUi = document.getElementById('result-ui');
+            resUi.classList.remove('hidden');
+            
+            const finalScore = Math.round((score / quizData.length) * 100);
+            document.getElementById('final-score').innerHTML = `
+                Skor Anda: <span class="text-blue-600 font-bold text-4xl">${finalScore}</span><br>
+                <span class="text-sm">Menjawab benar ${score} dari ${quizData.length} soal.</span>
+            `;
+        }
+
+        // Jalankan soal pertama
+        updateUI();
+    </script>
+</body>
+</html>
